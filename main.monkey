@@ -14,19 +14,24 @@ Class Application Extends App Implements IOnLoadImageComplete
 	
 	' Methods:
 	Method OnCreate:Int()
+		' Create a graphical context.
 		graphics = New Canvas()
 		
+		' Hide the cursor when the user mouses over the window.
 		HideMouse()
 		
 		Return 0
 	End
 	
 	Method OnRender:Int()
+		' Constant variable(s):
 		Const STATUS_X:= 8.0
 		Const STATUS_Y:= 8.0
 		
+		' Clear the screen.
 		graphics.Clear(0.75, 0.75, 0.75)
 		
+		' Get the mouse location.
 		Local x:= MouseX()
 		Local y:= MouseY()
 		
@@ -44,6 +49,7 @@ Class Application Extends App Implements IOnLoadImageComplete
 			Endif
 		Endif
 		
+		' Flush the context.
 		graphics.Flush()
 		
 		Return 0
@@ -79,8 +85,6 @@ Class Application Extends App Implements IOnLoadImageComplete
 		If (img = Null) Then
 			Print("Error loading image from: ~q" + path + "~q")
 		Else
-			DebugStop()
-			
 			Self.image = img
 			
 			Print("Loaded image successfully: ~q" + path + "~q")
