@@ -80,12 +80,35 @@ Class AsyncImageLoader Extends AsyncImageLoaderThread Implements IAsyncEventSour
 			Local width:= resolution[0]
 			Local height:= resolution[1]
 			
+			' Allocate a new image using the detected resolution.
 			Local img:= New Image(width, height, 0.5, 0.5, flags)
 			
+			' Multiply each of the pixel's RGB color channels by the pixel's alpha channel:
+			For Local pixelIndex:= 0 Until data.Length Step 4
+				Local pixel:= data.PeekInt(pixelIndex)
+				
+				' Retrieve the alpha channel.
+				Local a:= (pixel Shr 24 & 255)
+				
+				' Calculate the floating-point representation of 'a'. (0.0 to 1.0)
+				Local a_f:= (Float(a) / 255.0)
+				
+				' Retrieve each color value from our pixel, then multiply each by our alpha:
+				Local b:= Int(Float(pixel Shr 16 & 255) * a_f)
+				Local g:= Int(Float(pixel Shr 8 & 255) * a_f)
+				Local r:= Int(Float(pixel & 255) * a_f)
+				
+				' Rewrite to the image-buffer using a composite of our color channels.
+				data.PokeInt(pixelIndex, ((a Shl 24) | (b Shl 16) | (g Shl 8) | r))
+			Next
+			
+			' Upload the image-buffer.
 			img.WritePixels(0, 0, width, height, data)
 			
+			' Notify the user of our success.
 			onComplete.OnLoadImageComplete(img, realPath, Self)
 		Else
+			' Notify the user that we have failed.
 			onComplete.OnLoadImageComplete(Null, realPath, Self)
 		Endif
 	End

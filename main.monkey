@@ -29,7 +29,7 @@ Class Application Extends App Implements IOnLoadImageComplete
 		Const STATUS_Y:= 8.0
 		
 		' Clear the screen.
-		graphics.Clear(0.75, 0.75, 0.75)
+		graphics.Clear(0.75, 0.25, 0.35)
 		
 		' Get the mouse location.
 		Local x:= MouseX()
